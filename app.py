@@ -1,9 +1,8 @@
-import os
 from pathlib import Path
 import json
 from xml.etree import ElementTree as ET
-
 import sqlite3
+
 from bs4 import BeautifulSoup
 
 from flask import Flask, render_template
