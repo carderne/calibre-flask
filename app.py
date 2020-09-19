@@ -52,7 +52,7 @@ def get_books():
                 )
             except AttributeError:
                 description = ""
-            description = BeautifulSoup(description).get_text()
+            description = BeautifulSoup(description, "html.parser").get_text()
             books.append(
                 {
                     "id": idd,
