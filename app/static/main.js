@@ -18,7 +18,7 @@ function loadBooks() {
 
     let cover = create("div", single);
     let src = book.hasCover ? book.cover : "static/cover.jpg";
-    //let img = create("img", cover, {"src": src, "alt": "cover", "loading": "lazy"});
+    let img = create("img", cover, {"src": src, "alt": "cover", "loading": "lazy"});
 
     let details = create("div", single);
     let title = create("div", details, [], book.title, ["title"]);

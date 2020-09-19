@@ -4,11 +4,14 @@ import sqlite3
 
 from bs4 import BeautifulSoup
 
-root = Path("app/static/data")
-db = root / "metadata.db"
+# Paths for Python relative to repository root
+# Paths for HTML/JS relative ap ./app/
+repo_data = Path("app/static/data/")
+app_data = Path("static/data/")
 
 
 def get_books():
+    db = repo_data / "metadata.db"
     con = sqlite3.connect(db)
     cursor = con.cursor()
 
@@ -31,10 +34,11 @@ def get_books():
     for book in cursor.fetchall():
         idd = book[0]
         if idd in data:
-            path = root / book[4]
+
+            path = app_data / book[4]
             try:
                 description = (
-                    ET.parse(path / "metadata.opf")
+                    ET.parse(repo_data / book[4] / "metadata.opf")
                     .getroot()[0]
                     .find("{http://purl.org/dc/elements/1.1/}description")
                     .text
