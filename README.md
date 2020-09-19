@@ -1,10 +1,10 @@
 # calibre-flask
-Simple Flask server for Calibre ebook library
+Simple Flask server for Calibre ebook library.
 
 ## Setup
-Must create a symlink called `data` within the `./static/` directory, that points to your Calibre ebook library. Example:
+Create a symlink called `data` within the `./static/` directory, that points to your Calibre ebook library (that contains `metadata.db`).
 ```bash
-ln -s ~/Documents/Calibre/ ./static/data
+ln -s ~/path/to/calibre/library/ ./app/static/data
 ```
 
 Install requirements:
@@ -13,33 +13,29 @@ pip install -r requirements.txt
 ```
 
 ## Configuration
-Need to create a `./secrets` file like this:
+Create a `./secrets` file containing a secret key for Flask to use for encryption.
 ```
-export FLASK_SECRET_KEY=makeyourownsecretkeyhere
-```
-
-Next need to create a user file. Use `werkzeug` to create hashed passwords:
-```python
-from werkzeug.security import generate_password_hash
-generate_password_hash("your-unhashed-password", "sha256")
+echo export FLASK_SECRET_KEY=$(python3 -c 'import secrets; \
+    print(secrets.token_urlsafe(16))') > baz
 ```
 
-Store the output for each password in a users file `./users.yaml`:
-```
-user1: "hashedpassword"
-user2: "anotherhashedpassword"
+Next create a `users.yaml` to control authentication. This scripts outputs usernames with hashed passwords.
+```bash
+./create_user.py
+# and follow the prompts
 ```
 
 ## Development
 Run app in development mode:
 ```bash
-FLASK_DEBUG=1 FLASK_RUN_PORT=5010 FLASK_APP=app.py flask run
+source ./secrets
+FLASK_DEBUG=1 FLASK_RUN_PORT=5010 FLASK_APP=app/app.py flask run
 ```
 
 ## Serving
 Serve with gunicorn:
 ```bash
-gunicorn app:app
+gunicorn app.app:app
 ```
 
 ## Nginx config

@@ -4,7 +4,7 @@ import sqlite3
 
 from bs4 import BeautifulSoup
 
-root = Path("static/data")
+root = Path("app/static/data")
 db = root / "metadata.db"
 
 
