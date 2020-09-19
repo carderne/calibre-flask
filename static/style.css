@@ -1,0 +1,69 @@
+:root {
+    --accent: #E97F35;
+    --text: #6B6F72;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: sans-serif;
+    color: var(--text);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    padding-left: 30px;
+}
+
+.header {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #b79b9f;
+}
+
+.header > div {
+    margin: 20px;
+}
+
+#books {
+    margin-top: 60px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.list {
+    flex-direction: column;
+}
+
+.single {
+    margin-top: 20px;
+    width: 120px;
+}
+
+.wide {
+    display: flex;
+    width: initial;
+}
+
+.title {
+    font-weight: bold;
+}
+
+.description {
+    display: none;
+}
+
+.wide > div > .description {
+    display: unset;
+}
+
+img {
+    width: 100px;
+}
