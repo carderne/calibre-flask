@@ -24,3 +24,20 @@ Serve with gunicorn:
 ```bash
 gunicorn app:app
 ```
+
+## Nginx config
+```
+client_header_buffer_size 50000k;
+large_client_header_buffers 16 50000k;
+client_max_body_size 200m;
+
+server {
+    listen 80;
+    server_name 35.240.48.205;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+    }
+}
+```
+

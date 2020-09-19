@@ -1,72 +1,77 @@
-from pathlib import Path
 import json
-from xml.etree import ElementTree as ET
-import sqlite3
 
-from bs4 import BeautifulSoup
+from flask import Flask, render_template, redirect, url_for, request
+import flask_login
 
-from flask import Flask, render_template
+from .books import get_books
 
 app = Flask(__name__)
+app.secret_key = "hello this is the secret_key for flask"
 
-root = Path("static/data")
-db = root / "metadata.db"
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+
+users = {"foo@bar.tld": {"pw": "secret"}}
+
+
+class User(flask_login.UserMixin):
+    pass
+
+
+@login_manager.user_loader
+def user_loader(email):
+    if email not in users:
+        return
+    user = User()
+    user.id = email
+    return user
+
+
+@login_manager.request_loader
+def request_loader(request):
+    email = request.form.get("email")
+    if email not in users:
+        return
+    user = User()
+    user.id = email
+    user.is_authenticated = request.form["pw"] == users[email]["pw"]
+    return user
+
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return redirect(url_for("login"))
 
 
 @app.route("/")
+@flask_login.login_required
 def index():
     books = get_books()
     return render_template("index.html", books=json.dumps(books))
 
 
-def get_books():
-    con = sqlite3.connect(db)
-    cursor = con.cursor()
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return """
+               <form action='login' method='POST'>
+                <input type='text' name='email' id='email' placeholder='email'></input>
+                <input type='password' name='pw' id='pw' placeholder='password'></input>
+                <input type='submit' name='submit'></input>
+               </form>
+               """
 
-    cursor.execute(
-        "SELECT book, name, format FROM data "
-        "WHERE format IN ('MOBI', 'AZW', 'AZW3', 'PDF')"
-    )
-    data = {x[0]: f"{x[1]}.{x[2].lower()}" for x in cursor.fetchall()}
+    email = request.form["email"]
+    if request.form["pw"] == users[email]["pw"]:
+        user = User()
+        user.id = email
+        flask_login.login_user(user)
+        return redirect(url_for("index"))
 
-    cursor.execute("SELECT id, name FROM authors")
-    authors = {x[0]: x[1] for x in cursor.fetchall()}
+    return "Bad login"
 
-    cursor.execute("SELECT book, author FROM books_authors_link")
-    link = {x[0]: x[1] for x in cursor.fetchall()}
 
-    cursor.execute(
-        "SELECT id, title, sort, author_sort, path, has_cover, last_modified FROM books"
-    )
-    books = []
-    for book in cursor.fetchall():
-        idd = book[0]
-        if idd in data:
-            path = root / book[4]
-            try:
-                description = (
-                    ET.parse(path / "metadata.opf")
-                    .getroot()[0]
-                    .find("{http://purl.org/dc/elements/1.1/}description")
-                    .text
-                )
-            except AttributeError:
-                description = ""
-            description = BeautifulSoup(description, "html.parser").get_text()
-            books.append(
-                {
-                    "id": idd,
-                    "title": book[1],
-                    "sort": book[2],
-                    "author": authors[link[idd]],
-                    "authorSort": book[3],
-                    "description": description,
-                    "cover": str(path / "cover.jpg"),
-                    "hasCover": book[5],
-                    "lastModified": book[6],
-                    "file": str(path / data[idd]),
-                }
-            )
-
-    cursor.close()
-    return books
+@app.route("/logout")
+def logout():
+    flask_login.logout_user()
+    return "Logged out"
