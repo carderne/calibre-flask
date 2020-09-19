@@ -2,7 +2,6 @@
 Simple Flask server for Calibre ebook library
 
 ## Setup
-
 Must create a symlink called `data` within the `./static/` directory, that points to your Calibre ebook library. Example:
 ```bash
 ln -s ~/Documents/Calibre/ ./static/data
@@ -11,6 +10,24 @@ ln -s ~/Documents/Calibre/ ./static/data
 Install requirements:
 ```bash
 pip install -r requirements.txt
+```
+
+## Configuration
+Need to create a `./secrets` file like this:
+```
+export FLASK_SECRET_KEY=makeyourownsecretkeyhere
+```
+
+Next need to create a user file. Use `werkzeug` to create hashed passwords:
+```python
+from werkzeug.security import generate_password_hash
+generate_password_hash("your-unhashed-password", "sha256")
+```
+
+Store the output for each password in a users file `./users.yaml`:
+```
+user1: "hashedpassword"
+user2: "anotherhashedpassword"
 ```
 
 ## Development
