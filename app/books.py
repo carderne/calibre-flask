@@ -3,15 +3,16 @@ from xml.etree import ElementTree as ET
 import sqlite3
 
 from bs4 import BeautifulSoup
+import flask_resize
 
-# Paths for Python relative to repository root
-# Paths for HTML/JS relative ap ./app/
-repo_data = Path("app/data/")
-app_data = Path("data/")
+resize = flask_resize.make_resizer(
+    flask_resize.configuration.Config(url="", root="app", target_directory="resized")
+)
 
 
 def get_books():
-    db = repo_data / "metadata.db"
+    data_dir = Path("app/data/")
+    db = data_dir / "metadata.db"
     con = sqlite3.connect(db)
     cursor = con.cursor()
 
@@ -34,18 +35,23 @@ def get_books():
     for book in cursor.fetchall():
         idd = book[0]
         if idd in data:
-
-            path = app_data / book[4]
             try:
                 description = (
-                    ET.parse(repo_data / book[4] / "metadata.opf")
+                    ET.parse(data_dir / book[4] / "metadata.opf")
                     .getroot()[0]
                     .find("{http://purl.org/dc/elements/1.1/}description")
                     .text
                 )
+                description = BeautifulSoup(description, "html.parser").get_text()
             except AttributeError:
                 description = ""
-            description = BeautifulSoup(description, "html.parser").get_text()
+
+            has_cover = book[5]
+            book_file = f"data/{book[4]}/{data[idd]}"
+            cover_to_resize = f"data/{book[4]}/cover.jpg"
+            cover = resize(cover_to_resize, "400x600") if has_cover else ""
+            cover_small = resize(cover_to_resize, "100x150") if has_cover else ""
+
             books.append(
                 {
                     "id": idd,
@@ -54,10 +60,11 @@ def get_books():
                     "author": authors[link[idd]],
                     "authorSort": book[3],
                     "description": description,
-                    "cover": str(path / "cover.jpg"),
-                    "hasCover": book[5],
+                    "cover": cover,
+                    "coverSmall": cover_small,
+                    "hasCover": has_cover,
                     "lastModified": book[6],
-                    "file": str(path / data[idd]),
+                    "file": book_file,
                 }
             )
 

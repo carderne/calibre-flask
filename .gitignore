@@ -2,6 +2,7 @@
 secrets
 users.yaml
 app/data
+app/resized
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

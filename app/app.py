@@ -62,8 +62,13 @@ def index():
 
 @app.route("/data/<path:path>")
 @login_required
-def get_dir(path):
+def get_data(path):
     return send_from_directory("data", path)
+
+
+@app.route("/resized/<path:path>")
+def get_img(path):
+    return send_from_directory("resized", path)
 
 
 @app.route("/login", methods=["GET", "POST"])

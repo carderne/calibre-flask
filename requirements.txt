@@ -1,5 +1,6 @@
 beautifulsoup4
 Flask
 Flask-Login
+Flask-Resize
 gunicorn
 PyYAML

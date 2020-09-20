@@ -13,7 +13,7 @@ cd calibre-flask
 ln -s ~/path/to/calibre/library/ ./app/data
 ```
 
-Create a virtual env (if needed) and install requirements:
+Create a virtual env (if needed) and install requirements. Note: to run this in production (i.e., through `systemd` and `gunicorn`), these libraries might need to also be installed in the system Python, or somewhere where they're available...
 ```bash
 python3 -m venv ./venv/
 source ./venv/bin/activate
