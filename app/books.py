@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 
 # Paths for Python relative to repository root
 # Paths for HTML/JS relative ap ./app/
-repo_data = Path("app/static/data/")
-app_data = Path("static/data/")
+repo_data = Path("app/data/")
+app_data = Path("data/")
 
 
 def get_books():
