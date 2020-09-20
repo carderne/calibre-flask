@@ -2,16 +2,19 @@
 <html lang='en'>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>Calibre Flask</title>
+        <title>Book library</title>
         <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
         <link href='static/style.css' rel='stylesheet' />
     </head>
     <body>
         <div class="header">
-            <h2>Calibre Flask</h2>
+            <div class="page-title">Book library</div>
             <div>
                 <input type="checkbox" id="list-view" />
                 <label for="list-view">List view</label>
+            </div>
+            <div class="logout">
+                <a href="/logout">Logout</a>
             </div>
         </div>
         <div id="books" class="wrap"></div>

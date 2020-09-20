@@ -31,8 +31,12 @@ def get_books():
     cursor.execute(
         "SELECT id, title, sort, author_sort, path, has_cover, last_modified FROM books"
     )
-    books = []
-    for book in cursor.fetchall():
+
+    books = cursor.fetchall()
+    cursor.close()
+
+    book_list = []
+    for book in books:
         idd = book[0]
         if idd in data:
             try:
@@ -52,7 +56,7 @@ def get_books():
             cover = resize(cover_to_resize, "400x600") if has_cover else ""
             cover_small = resize(cover_to_resize, "100x150") if has_cover else ""
 
-            books.append(
+            book_list.append(
                 {
                     "id": idd,
                     "title": book[1],
@@ -68,5 +72,6 @@ def get_books():
                 }
             )
 
-    cursor.close()
-    return books
+    book_list = sorted(book_list, key=lambda x: x["authorSort"])
+
+    return book_list

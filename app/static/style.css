@@ -24,12 +24,38 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px;
-    background: #b79b9f;
+    height: 45px;
+    background: #160f42;
+    color: #f5fafc;
+}
+
+.page-title {
+    font-size: 1.2em;
 }
 
 .header > div {
-    margin: 20px;
+    margin: 10px;
+}
+
+.logout {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #b1ecd5;
+    border-color: #b1ecd5;
+    border-style: solid;
+    border-radius: 3px;
+}
+
+.logout:hover {
+    background: #9fd4bf;
+    border-color: #9fd4bf;
+}
+
+.header a, .header a:hover, .header a:visited, .header a:active {
+    margin: 10px;
+    color: #111715;
+    text-decoration: none;
 }
 
 #books {
