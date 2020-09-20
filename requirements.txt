@@ -2,3 +2,4 @@ beautifulsoup4
 Flask
 Flask-Login
 gunicorn
+PyYAML

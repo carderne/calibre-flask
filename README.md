@@ -10,11 +10,13 @@ git clone https://github.com/carderne/calibre-flask
 Create a symlink called `data` within the `./static/` directory, that points to your Calibre ebook library (that contains `metadata.db`).
 ```bash
 cd calibre-flask
-ln -s ~/path/to/calibre/library/ ./app/static/data
+ln -s ~/path/to/calibre/library/ ./app/data
 ```
 
-Install requirements:
+Create a virtual env (if needed) and install requirements:
 ```bash
+python3 -m venv ./venv/
+source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -46,10 +48,6 @@ gunicorn app.app:app
 
 ## Nginx config
 ```
-client_header_buffer_size 50000k;
-large_client_header_buffers 16 50000k;
-client_max_body_size 200m;
-
 server {
     listen 80;
     server_name 35.240.48.205;
@@ -60,3 +58,55 @@ server {
 }
 ```
 
+## systemctl
+[source](https://docs.gunicorn.org/en/stable/deploy.html)
+
+Create `/etc/systemd/system/gunicorn.service`:
+
+Need to add `Environment="FLASK_SECRET_KEY=..."`.
+
+```
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+Type=notify
+User=someuser
+Group=someuser
+RuntimeDirectory=gunicorn
+WorkingDirectory=/home/someuser/applicationroot
+ExecStart=/usr/bin/gunicorn applicationname.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+```
+
+And `/etc/systemd/system/gunicorn.socket`:
+```
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+User=www-data
+
+[Install]
+WantedBy=sockets.target
+```
+
+And:
+```bash
+sudo systemctl enable --now gunicorn.socket
+```
+
+In nginx conf, change `proxy_pass` to:
+```
+proxy_pass http://unix:/run/gunicorn.sock;
+include proxy_params;
+```
