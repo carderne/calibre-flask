@@ -5,7 +5,7 @@ const queryAll = document.querySelectorAll.bind(document);
 const create = function (
   element,
   parent,
-  properties = [],
+  properties = {},
   text = "",
   classes = []
 ) {
@@ -24,14 +24,24 @@ const create = function (
 let divBooks = get("books");
 let elView = get("view");
 let elSort = get("sort");
+let elSize = get("size");
 
 function loadBooks() {
   books.forEach((b) => {
     let single = create("div", divBooks, [], "", ["single"]);
 
     let cover = create("div", single);
-    let src = b.hasCover ? b.coverSmall : "static/cover.jpg";
-    create("img", cover, { src: src, alt: "cover", loading: "lazy" });
+    let a = create("a", cover, { href: b.file });
+    let pic = create("picture", a);
+    create("source", pic, {
+      srcset: b.hasCover ? b.coverSmall : "static/cover.jpg",
+      media: "(max-width: 100px)",
+    });
+    create("img", pic, {
+      src: b.hasCover ? b.cover : "static/cover.jpg",
+      alt: "cover",
+      loading: "lazy",
+    });
 
     let details = create("div", single);
     create("div", details, [], b.title, ["title"]);
@@ -40,11 +50,8 @@ function loadBooks() {
     create("div", details, [], b.authorSort, ["hidden"]);
     create("div", details, [], b.added, ["hidden"]);
 
-    let dl = create("div", details);
-    create("a", dl, { href: b.file }, "download");
-
     let desc = b.description;
-    desc = desc.length > 400 ? b.description.substring(0, 400) + "..." : desc;
+    desc = desc.length > 400 ? desc.substring(0, 400) + "..." : desc;
     create("div", details, [], desc, ["description"]);
   });
 }
@@ -74,7 +81,6 @@ function updateSort() {
   };
   let index = indices[by];
   let order = by == "added" ? -1 : 1;
-  console.log(index);
   [...divBooks.children]
     .sort((a, b) =>
       a.children[1].children[index].innerText >
@@ -85,8 +91,18 @@ function updateSort() {
     .forEach((node) => divBooks.appendChild(node));
 }
 
+elSize.oninput = updateSize;
+function updateSize() {
+  let size = elSize.value;
+  queryAll(".single").forEach((single) => {
+    single.style.width = size + "px";
+    single.children[0].style.width = size + "px";
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   loadBooks();
   updateView();
   updateSort();
+  updateSize();
 });

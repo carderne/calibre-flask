@@ -53,8 +53,10 @@ def get_books():
             has_cover = book[5]
             book_file = f"data/{book[4]}/{data[idd]}"
             cover_to_resize = f"data/{book[4]}/cover.jpg"
-            cover = resize(cover_to_resize, "400x600") if has_cover else ""
-            cover_small = resize(cover_to_resize, "100x150") if has_cover else ""
+            cover = resize(cover_to_resize, "400x600", fill=True) if has_cover else ""
+            cover_small = (
+                resize(cover_to_resize, "100x150", fill=True) if has_cover else ""
+            )
 
             book_list.append(
                 {
