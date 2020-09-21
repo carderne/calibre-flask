@@ -29,7 +29,7 @@ def get_books():
     link = {x[0]: x[1] for x in cursor.fetchall()}
 
     cursor.execute(
-        "SELECT id, title, sort, author_sort, path, has_cover, last_modified FROM books"
+        "SELECT id, title, sort, author_sort, path, has_cover, timestamp FROM books"
     )
 
     books = cursor.fetchall()
@@ -67,7 +67,7 @@ def get_books():
                     "cover": cover,
                     "coverSmall": cover_small,
                     "hasCover": has_cover,
-                    "lastModified": book[6],
+                    "added": book[6].split(" ")[0],
                     "file": book_file,
                 }
             )

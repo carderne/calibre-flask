@@ -10,8 +10,16 @@
         <div class="header">
             <div class="page-title">Book library</div>
             <div>
-                <input type="checkbox" id="list-view" />
-                <label for="list-view">List view</label>
+                <input type="checkbox" id="view" />
+                <label for="view">List view</label>
+            </div>
+            <div>
+                Sort by:
+                <select name="sort" id="sort">
+                    <option value="author" selected>Author</option>
+                    <option value="title">Title</option>
+                    <option value="added">Added</option>
+                </select>
             </div>
             <div class="logout">
                 <a href="/logout">Logout</a>

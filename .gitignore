@@ -3,6 +3,10 @@ config.py
 users.yaml
 app/data
 app/resized
+.eslintrc.json
+node_modules/
+package-lock.json
+package.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
