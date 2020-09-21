@@ -1,4 +1,3 @@
-import os
 import json
 import yaml
 
@@ -16,7 +15,7 @@ from werkzeug.security import check_password_hash
 from .books import get_books
 
 app = Flask(__name__)
-app.secret_key = os.environ["FLASK_SECRET_KEY"]
+app.config.from_pyfile("../config.py")
 
 login_manager = LoginManager()
 login_manager.init_app(app)

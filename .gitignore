@@ -1,5 +1,5 @@
 # Custom
-secrets
+config.py
 users.yaml
 app/data
 app/resized

@@ -3,46 +3,44 @@ Simple Flask server for Calibre ebook library.
 
 ## Setup
 Clone the repo:
-```bash
+```
 git clone https://github.com/carderne/calibre-flask
 ```
 
-Create a symlink called `data` within the `./static/` directory, that points to your Calibre ebook library (that contains `metadata.db`).
-```bash
+Create a symlink called `data` within the `static/` directory, that points to your Calibre ebook library (that contains `metadata.db`).
+```
 cd calibre-flask
 ln -s ~/path/to/calibre/library/ ./app/data
 ```
 
 Create a virtual env (if needed) and install requirements. Note: to run this in production (i.e., through `systemd` and `gunicorn`), these libraries might need to also be installed in the system Python, or somewhere where they're available...
-```bash
+```
 python3 -m venv ./venv/
 source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
 ## Configuration
-Create a `./secrets` file containing a secret key for Flask to use for encryption.
+Create a `config.py` file containing a secret key for Flask to use for encryption.
 ```
-echo export FLASK_SECRET_KEY=$(python3 -c 'import secrets; \
-    print(secrets.token_urlsafe(16))') > secrets
+./bin/make_config.py > config.py
 ```
 
 Next create a `users.yaml` to control authentication. This scripts outputs usernames with hashed passwords.
-```bash
-./create_user.py
+```
+./bin/create_user.py
 # and follow the prompts
 ```
 
 ## Development
 Run app in development mode:
-```bash
-source ./secrets
+```
 FLASK_DEBUG=1 FLASK_RUN_PORT=5010 FLASK_APP=app/app.py flask run
 ```
 
 ## Serving
 Serve with gunicorn:
-```bash
+```
 gunicorn app.app:app
 ```
 
@@ -62,9 +60,6 @@ server {
 [source](https://docs.gunicorn.org/en/stable/deploy.html)
 
 Create `/etc/systemd/system/gunicorn.service`:
-
-Need to add `Environment="FLASK_SECRET_KEY=..."`.
-
 ```
 [Unit]
 Description=gunicorn daemon
@@ -101,7 +96,7 @@ WantedBy=sockets.target
 ```
 
 And:
-```bash
+```
 sudo systemctl enable --now gunicorn.socket
 ```
 
