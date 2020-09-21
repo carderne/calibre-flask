@@ -43,7 +43,9 @@ function loadBooks() {
     let dl = create("div", details);
     create("a", dl, { href: b.file }, "download");
 
-    create("div", details, [], b.description, ["description"]);
+    let desc = b.description;
+    desc = desc.length > 400 ? b.description.substring(0, 400) + "..." : desc;
+    create("div", details, [], desc, ["description"]);
   });
 }
 
