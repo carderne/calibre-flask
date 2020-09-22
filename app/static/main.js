@@ -26,6 +26,7 @@ let elView = get("view");
 let elSort = get("sort");
 let elSize = get("size");
 let elFilter = get("filter");
+let elClear = get("clear");
 
 function loadBooks() {
   let booksUse = debug ? books.slice(0, 50) : books;
@@ -138,9 +139,16 @@ function updateFilter() {
   }
 }
 
+elClear.onclick = clearFilter;
+function clearFilter() {
+  elFilter.value = "";
+  updateFilter();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   loadBooks();
   updateView();
   updateSort();
   updateSize();
+  updateFilter();
 });
