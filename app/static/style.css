@@ -106,3 +106,7 @@ img {
 .hidden {
     display: none;
 }
+
+.hl {
+    background: #c3f9ff;
+}

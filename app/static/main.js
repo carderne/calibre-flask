@@ -106,20 +106,34 @@ elFilter.oninput = updateFilter;
 function updateFilter() {
   let text = elFilter.value.toLowerCase();
   if (text.length > 3) {
-    [...divBooks.children].forEach((node) => {
-      if (
-        node.children[1].children[0].innerText.toLowerCase().includes(text) |
-        node.children[1].children[1].innerText.toLowerCase().includes(text) |
-        node.children[1].children[5].innerText.toLowerCase().includes(text)
-      ) {
-        node.removeAttribute("style");
+    [...divBooks.children].forEach((single) => {
+      let nodes = [
+        single.children[1].children[0],
+        single.children[1].children[1],
+        single.children[1].children[5],
+      ];
+      if (nodes.some((node) => node.innerText.toLowerCase().includes(text))) {
+        single.removeAttribute("style");
+        let re = new RegExp(text, "ig");
+        nodes.forEach((node) => {
+          node.innerHTML = node.innerText.replace(
+            re,
+            "<span class='hl'>$&</span>"
+          );
+        });
       } else {
-        node.style.display = "none";
+        single.style.display = "none";
       }
     });
   } else {
-    [...divBooks.children].forEach((node) => {
-      node.removeAttribute("style");
+    [...divBooks.children].forEach((single) => {
+      single.removeAttribute("style");
+    });
+    queryAll(".hl").forEach((node) => {
+      node.parentElement.replaceChild(
+        document.createTextNode(node.innerText),
+        node
+      );
     });
   }
 }
