@@ -20,9 +20,6 @@ body {
 .header {
     display: flex;
     flex-wrap: wrap;
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     background: var(--header-bg);
     color: var(--header-fg);
@@ -87,7 +84,6 @@ select {
 }
 
 #books {
-    margin-top: 60px;
     display: flex;
     flex-wrap: wrap;
 }
