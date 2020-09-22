@@ -1,6 +1,7 @@
 :root {
-    --accent: #E97F35;
     --text: #6B6F72;
+    --header-bg: #160f42;
+    --header-fg:  #f5fafc
 }
 
 html {
@@ -22,8 +23,8 @@ body {
     left: 0;
     width: 100%;
     height: 45px;
-    background: #160f42;
-    color: #f5fafc;
+    background: var(--header-bg);
+    color: var(--header-fg);
 }
 
 .page-title {
@@ -113,7 +114,11 @@ img {
 
 .filter-box {
     display: flex;
-    padding: 2px;
+    /*padding: 2px;*/
+    height: 19x;
+    border-color: white;
+    border-style: solid;
+    border-radius: 3px;
 }
 
 input {

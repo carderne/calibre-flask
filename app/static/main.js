@@ -61,7 +61,7 @@ function loadBooks() {
 
 elView.onchange = updateView;
 function updateView() {
-  if (elView.checked) {
+  if (elView.value == "list") {
     get("books").classList.add("list");
     queryAll(".single").forEach((single) => {
       single.classList.add("wide");

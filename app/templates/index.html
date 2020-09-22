@@ -8,25 +8,27 @@
     </head>
     <body>
         <div class="header">
-            <div class="page-title">Book library</div>
-            <div>
-                <input type="checkbox" id="view" />
-                <label for="view">List view</label>
+            <div class="page-title">
+                Book library
             </div>
             <div>
-                Sort by:
-                <select name="sort" id="sort">
-                    <option value="author" selected>Author</option>
-                    <option value="title">Title</option>
-                    <option value="added">Added</option>
+                <select name="view" id="view">
+                    <option value="grid" selected>Grid view</option>
+                    <option value="list">List view</option>
                 </select>
             </div>
             <div>
-                Size:
+                <select name="sort" id="sort">
+                    <option value="author" selected>Sort by Author</option>
+                    <option value="title">Sort by Title</option>
+                    <option value="added">Sort by Added</option>
+                </select>
+            </div>
+            <div>
                 <select name="size" id="size">
-                    <option value="100" selected>S</option>
-                    <option value="200">M</option>
-                    <option value="300">L</option>
+                    <option value="100" selected>Size S</option>
+                    <option value="200">Size M</option>
+                    <option value="300">Size L</option>
                 </select>
             </div>
             <div class="filter-box">
