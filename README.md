@@ -48,10 +48,17 @@ gunicorn app.app:app
 ```
 server {
     listen 80;
-    server_name 35.240.48.205;
+    server_name server_name_here;
+    access_log /var/log/nginx/access.log;
 
     location / {
         proxy_pass http://127.0.0.1:8000;
+    }
+
+    location /resized/ {
+        root /path/to/app/resized;
+        expires max;
+        add_header Cache-Control "public";
     }
 }
 ```
