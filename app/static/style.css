@@ -155,3 +155,24 @@ img {
 .hl {
     background: #c3f9ff;
 }
+
+/* Login page */
+form {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+form > * {
+    box-sizing: border-box;
+    width: 80%;
+    margin: 5px auto;
+}
+
+@media screen and (min-width: 600px) {
+    form > * {
+        width: 200px;
+    }
+}
