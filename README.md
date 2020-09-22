@@ -35,7 +35,7 @@ Next create a `users.yaml` to control authentication. This scripts outputs usern
 ## Development
 Run app in development mode:
 ```
-FLASK_DEBUG=1 FLASK_RUN_PORT=5010 FLASK_APP=app/app.py flask run
+FLASK_DEBUG=1 FLASK_APP=app/app.py flask run
 ```
 
 ## Serving

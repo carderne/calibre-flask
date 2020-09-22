@@ -119,7 +119,21 @@ select {
 }
 
 .title {
+    overflow-wrap: break-word;
     font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.title:hover {
+    overflow: unset;
+    text-overflow: unset;
+    display: unset;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
 }
 
 .description {
