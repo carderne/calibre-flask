@@ -3,10 +3,6 @@
     --text: #6B6F72;
 }
 
-* {
-    /*box-sizing: border-box;*/
-}
-
 html {
     font-family: sans-serif;
     color: var(--text);

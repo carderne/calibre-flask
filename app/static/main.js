@@ -1,4 +1,4 @@
-/* global books */
+/* global books debug */
 
 const get = document.getElementById.bind(document);
 const queryAll = document.querySelectorAll.bind(document);
@@ -25,9 +25,11 @@ let divBooks = get("books");
 let elView = get("view");
 let elSort = get("sort");
 let elSize = get("size");
+let elFilter = get("filter");
 
 function loadBooks() {
-  books.forEach((b) => {
+  let booksUse = debug ? books.slice(0, 50) : books;
+  booksUse.forEach((b) => {
     let single = create("div", divBooks, [], "", ["single"]);
 
     let cover = create("div", single);
@@ -98,6 +100,28 @@ function updateSize() {
     single.style.width = size + "px";
     single.children[0].style.width = size + "px";
   });
+}
+
+elFilter.oninput = updateFilter;
+function updateFilter() {
+  let text = elFilter.value.toLowerCase();
+  if (text.length > 3) {
+    [...divBooks.children].forEach((node) => {
+      if (
+        node.children[1].children[0].innerText.toLowerCase().includes(text) |
+        node.children[1].children[1].innerText.toLowerCase().includes(text) |
+        node.children[1].children[5].innerText.toLowerCase().includes(text)
+      ) {
+        node.removeAttribute("style");
+      } else {
+        node.style.display = "none";
+      }
+    });
+  } else {
+    [...divBooks.children].forEach((node) => {
+      node.removeAttribute("style");
+    });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {

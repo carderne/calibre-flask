@@ -24,17 +24,23 @@
             <div>
                 Size:
                 <select name="size" id="size">
-                    <option value="100" selected>100</option>
-                    <option value="200">200</option>
-                    <option value="300">300</option>
+                    <option value="100" selected>S</option>
+                    <option value="200">M</option>
+                    <option value="300">L</option>
                 </select>
+            </div>
+            <div>
+                <input type="text" id="filter" name="filter" value="", placeholder="Filter...">
             </div>
             <div class="logout">
                 <a href="/logout">Logout</a>
             </div>
         </div>
         <div id="books" class="wrap"></div>
-        <script>const books = {{ books | safe }};</script>
+        <script>
+            const books = {{ books | safe }};
+            const debug = {{ debug | tojson }};
+        </script>
         <script src="static/main.js"></script>
     </body>
 </html>
