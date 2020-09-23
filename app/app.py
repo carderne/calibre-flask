@@ -49,7 +49,9 @@ def request_loader(request):
 
 @login_manager.unauthorized_handler
 def unauthorized_handler():
-    return redirect(url_for("login", msg="You need to log in!"))
+    return redirect(
+        url_for("login", msg="You need to log in!", s=request.args.get("s"))
+    )
 
 
 @app.route("/")
@@ -84,9 +86,9 @@ def login():
         user = User()
         user.id = username
         login_user(user)
-        return redirect(url_for("index"))
+        return redirect(url_for("index", s=request.args.get("s")))
 
-    return redirect(url_for("login", msg="Bad login!"))
+    return redirect(url_for("login", msg="Bad login!", s=request.args.get("s")))
 
 
 @app.route("/logout")

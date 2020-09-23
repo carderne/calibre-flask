@@ -147,6 +147,10 @@ function clearFilter() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  let search = new URL(window.location.href).searchParams.get("s");
+  if (search != null) {
+    elFilter.value = search;
+  }
   loadBooks();
   updateView();
   updateSort();

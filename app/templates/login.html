@@ -7,7 +7,7 @@
         <link href='static/style.css' rel='stylesheet' />
     </head>
     <body>
-        <form action='login' method='POST'>
+        <form action={{ url_for('login', s=request.args.get('s')) }} method='POST'>
             <div>{{ msg }}</div>
             <input type='text' name='username' id='username' placeholder='username'></input>
             <input type='password' name='pw' id='pw' placeholder='password'></input>
