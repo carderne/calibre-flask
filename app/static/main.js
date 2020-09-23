@@ -37,11 +37,11 @@ function loadBooks() {
     let a = create("a", cover, { href: b.file });
     let pic = create("picture", a);
     create("source", pic, {
-      srcset: b.hasCover ? b.coverSmall : "static/cover.jpg",
+      srcset: b.coverSmall,
       media: "(max-width: 100px)",
     });
     create("img", pic, {
-      src: b.hasCover ? b.cover : "static/cover.jpg",
+      src: b.cover,
       alt: "cover",
       loading: "lazy",
     });

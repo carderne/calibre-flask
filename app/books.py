@@ -52,11 +52,11 @@ def get_books():
 
             has_cover = book[5]
             book_file = f"data/{book[4]}/{data[idd]}"
-            cover_to_resize = f"data/{book[4]}/cover.jpg"
-            cover = resize(cover_to_resize, "400x600", fill=True) if has_cover else ""
-            cover_small = (
-                resize(cover_to_resize, "100x150", fill=True) if has_cover else ""
+            cover_to_resize = (
+                f"data/{book[4]}/cover.jpg" if has_cover else "static/cover.jpg"
             )
+            cover = resize(cover_to_resize, "400x600", fill=True)
+            cover_small = resize(cover_to_resize, "100x150", fill=True)
 
             book_list.append(
                 {
@@ -68,7 +68,6 @@ def get_books():
                     "description": description,
                     "cover": cover,
                     "coverSmall": cover_small,
-                    "hasCover": has_cover,
                     "added": book[6].split(" ")[0],
                     "file": book_file,
                 }
