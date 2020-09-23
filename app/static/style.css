@@ -164,6 +164,10 @@ form {
     flex-direction: column;
 }
 
+form > div:first-child {
+    margin-bottom: 20px;
+}
+
 form > * {
     box-sizing: border-box;
     width: 80%;

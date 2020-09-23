@@ -49,7 +49,7 @@ def request_loader(request):
 
 @login_manager.unauthorized_handler
 def unauthorized_handler():
-    return redirect(url_for("login"))
+    return redirect(url_for("login", msg="You need to log in!"))
 
 
 @app.route("/")
@@ -75,7 +75,9 @@ def get_img(path):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html")
+        msg = request.args.get("msg")
+        msg = msg if msg else ""
+        return render_template("login.html", msg=msg)
 
     username = request.form["username"]
     if check_password_hash(users[username], request.form["pw"]):
@@ -84,10 +86,10 @@ def login():
         login_user(user)
         return redirect(url_for("index"))
 
-    return "Bad login"
+    return redirect(url_for("login", msg="Bad login!"))
 
 
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("login"))
+    return redirect(url_for("login", msg="You've logged out!"))
