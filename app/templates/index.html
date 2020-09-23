@@ -40,11 +40,27 @@
                 <a href="/logout">Logout</a>
             </div>
         </div>
-        <div id="books" class="wrap"></div>
-        <script>
-            const books = {{ books | safe }};
-            const debug = {{ debug | tojson }};
-        </script>
+        <div id="books" class="wrap">
+            {% for b in books %}
+            <div class="single">
+                <div>
+                    <a href="{{ b.file }}">
+                        <img src="{{ b.coverSmall }}"
+                             srcset="{{ b.coverSmall}} 100w, {{ b.cover }} 400w"
+                             sizes="1vw" alt="cover" loading="lazy">
+                    </a>
+                </div>
+                <div>
+                    <div class="title">{{ b.title }}</div>
+                    <div class="author">{{ b.author }}</div>
+                    <div class="hidden">{{ b.sort }}</div>
+                    <div class="hidden">{{ b.authorSort }}</div>
+                    <div class="hidden">{{ b.added }}</div>
+                    <div class="description">{{ b.description|e }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
         <script src="static/main.js"></script>
     </body>
 </html>

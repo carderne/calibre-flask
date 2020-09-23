@@ -58,9 +58,8 @@ def unauthorized_handler():
 @login_required
 def index():
     books = get_books()
-    return render_template(
-        "index.html", books=json.dumps(books), debug=app.config["DEBUG"]
-    )
+    books = books[:50] if app.config["DEBUG"] else books
+    return render_template("index.html", books=books)
 
 
 @app.route("/data/<path:path>")
