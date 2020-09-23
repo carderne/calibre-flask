@@ -35,13 +35,10 @@ function loadBooks() {
 
     let cover = create("div", single);
     let a = create("a", cover, { href: b.file });
-    let pic = create("picture", a);
-    create("source", pic, {
-      srcset: b.coverSmall,
-      media: "(max-width: 100px)",
-    });
-    create("img", pic, {
-      src: b.cover,
+    create("img", a, {
+      src: b.coverSmall,
+      srcset: b.coverSmall + " 100w, " + b.cover + " 400w",
+      sizes: "1vw",
       alt: "cover",
       loading: "lazy",
     });
@@ -100,6 +97,10 @@ function updateSize() {
   queryAll(".single").forEach((single) => {
     single.style.width = size + "px";
     single.children[0].style.width = size + "px";
+  });
+  let sizes = size == "100" ? "1vw" : "100vw";
+  queryAll("img").forEach((img) => {
+    img["sizes"] = sizes;
   });
 }
 
