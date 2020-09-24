@@ -1,4 +1,3 @@
-import json
 import yaml
 
 from flask import (
@@ -50,7 +49,12 @@ def request_loader(request):
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return redirect(
-        url_for("login", msg="You need to log in!", s=request.args.get("s"))
+        url_for(
+            "login",
+            msg="You need to log in!",
+            d=request.endpoint,
+            s=request.args.get("s"),
+        )
     )
 
 
@@ -60,6 +64,14 @@ def index():
     books = get_books()
     books = books[:50] if app.config["DEBUG"] else books
     return render_template("index.html", books=books)
+
+
+@app.route("/b/")
+@login_required
+def basic():
+    books = get_books()
+    books = books[:50] if app.config["DEBUG"] else books
+    return render_template("index_basic.html", books=books)
 
 
 @app.route("/data/<path:path>")
@@ -85,9 +97,15 @@ def login():
         user = User()
         user.id = username
         login_user(user)
-        return redirect(url_for("index", s=request.args.get("s")))
+        dest = request.args.get("d")
+        dest = dest if dest else "index"
+        return redirect(url_for(dest, s=request.args.get("s")))
 
-    return redirect(url_for("login", msg="Bad login!", s=request.args.get("s")))
+    return redirect(
+        url_for(
+            "login", msg="Bad login!", d=request.args.get("d"), s=request.args.get("s")
+        )
+    )
 
 
 @app.route("/logout")

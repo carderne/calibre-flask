@@ -51,7 +51,7 @@ def get_books():
                 description = ""
 
             has_cover = book[5]
-            book_file = f"data/{book[4]}/{data[idd]}"
+            book_file = f"/data/{book[4]}/{data[idd]}"
             cover_to_resize = (
                 f"data/{book[4]}/cover.jpg" if has_cover else "static/cover.jpg"
             )
