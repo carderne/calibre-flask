@@ -17,7 +17,7 @@ body {
     margin: 0;
 }
 
-.header {
+header {
     position: sticky;
     top: 0;
     left: 0;
@@ -28,12 +28,18 @@ body {
     color: var(--header-fg);
 }
 
-.header > div {
+header > div {
     margin: 10px;
 }
 
-.header > .space {
+header > .space {
     flex-grow: 3;
+}
+
+header a, header a:hover, header a:visited, header a:active {
+    margin: 10px;
+    color: #111715;
+    text-decoration: none;
 }
 
 .page-title {
@@ -80,13 +86,7 @@ select {
     border-color: #9fd4bf;
 }
 
-.header a, .header a:hover, .header a:visited, .header a:active {
-    margin: 10px;
-    color: #111715;
-    text-decoration: none;
-}
-
-#books {
+main {
     display: flex;
     flex-wrap: wrap;
 }

@@ -3,13 +3,14 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Book library</title>
-        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+        <meta name='viewport' content='initial-scale=1,maximum-scale=5,user-scalable=no' />
     </head>
     <body>
-        {% for b in books %}
-        <a href="{{ b.file }}">
-            <p>{{ b.author }} - {{ b.title }}</p>
-        </a>
-        {% endfor %}
+        <header><nav><a href="/logout">LOGOUT</a></nav></header>
+        <main>
+            {%- for b in books %}
+            <a href="{{ b.file }}"><p>{{ b.author }} - {{ b.title }}</p></a>
+            {%- endfor %}
+        </main>
     </body>
 </html>
