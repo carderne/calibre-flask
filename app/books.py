@@ -16,63 +16,55 @@ def get_books():
     con = sqlite3.connect(db)
     cursor = con.cursor()
 
-    cursor.execute(
-        "SELECT book, name, format FROM data "
-        "WHERE format IN ('MOBI', 'AZW', 'AZW3', 'PDF')"
-    )
-    data = {x[0]: f"{x[1]}.{x[2].lower()}" for x in cursor.fetchall()}
-
-    cursor.execute("SELECT id, name FROM authors")
-    authors = {x[0]: x[1] for x in cursor.fetchall()}
-
-    cursor.execute("SELECT book, author FROM books_authors_link")
-    link = {x[0]: x[1] for x in cursor.fetchall()}
-
-    cursor.execute(
-        "SELECT id, title, sort, author_sort, path, has_cover, timestamp FROM books"
-    )
-
+    sql = """
+    SELECT books.id, books.title, books.sort, authors.name, books.author_sort,
+        books.path, data.name, data.format, books.has_cover, books.timestamp
+    FROM books
+    INNER JOIN books_authors_link ON books.id=books_authors_link.book
+    INNER JOIN authors ON books_authors_link.author=authors.id
+    INNER JOIN data ON books.id=data.book
+    WHERE data.format IN ('MOBI', 'AZW', 'AZW3', 'PDF')
+    GROUP BY books.id
+    """
+    cursor.execute(sql)
     books = cursor.fetchall()
     cursor.close()
 
     book_list = []
     for book in books:
-        idd = book[0]
-        if idd in data:
-            try:
-                description = (
-                    ET.parse(data_dir / book[4] / "metadata.opf")
-                    .getroot()[0]
-                    .find("{http://purl.org/dc/elements/1.1/}description")
-                    .text
-                )
-                description = BeautifulSoup(description, "html.parser").get_text()
-            except AttributeError:
-                description = ""
-
-            has_cover = book[5]
-            book_file = f"/data/{book[4]}/{data[idd]}"
-            cover_to_resize = (
-                f"data/{book[4]}/cover.jpg" if has_cover else "static/cover.jpg"
+        try:
+            description = (
+                ET.parse(data_dir / book[5] / "metadata.opf")
+                .getroot()[0]
+                .find("{http://purl.org/dc/elements/1.1/}description")
+                .text
             )
-            cover = resize(cover_to_resize, "400x600", fill=True)
-            cover_small = resize(cover_to_resize, "100x150", fill=True)
+            description = BeautifulSoup(description, "html.parser").get_text()
+        except AttributeError:
+            description = ""
 
-            book_list.append(
-                {
-                    "id": idd,
-                    "title": book[1],
-                    "sort": book[2],
-                    "author": authors[link[idd]],
-                    "authorSort": book[3],
-                    "description": description,
-                    "cover": cover,
-                    "coverSmall": cover_small,
-                    "added": book[6].split(" ")[0],
-                    "file": book_file,
-                }
-            )
+        has_cover = book[8]
+        book_file = f"/data/{book[5]}/{book[6]}.{book[7].lower()}"
+        cover_to_resize = (
+            f"data/{book[5]}/cover.jpg" if has_cover else "static/cover.jpg"
+        )
+        cover = resize(cover_to_resize, "400x600", fill=True)
+        cover_small = resize(cover_to_resize, "100x150", fill=True)
+
+        book_list.append(
+            {
+                "id": book[0],
+                "title": book[1],
+                "sort": book[2],
+                "author": book[3],
+                "authorSort": book[4],
+                "description": description,
+                "cover": cover,
+                "coverSmall": cover_small,
+                "added": book[9].split(" ")[0],
+                "file": book_file,
+            }
+        )
 
     book_list = sorted(book_list, key=lambda x: x["authorSort"])
-
     return book_list
