@@ -10,7 +10,7 @@ resize = flask_resize.make_resizer(
 )
 
 
-def get_books():
+def get_books(search=None):
     data_dir = Path("app/data/")
     db = data_dir / "metadata.db"
     con = sqlite3.connect(db)
@@ -51,20 +51,31 @@ def get_books():
         cover = resize(cover_to_resize, "400x600", fill=True)
         cover_small = resize(cover_to_resize, "100x150", fill=True)
 
-        book_list.append(
-            {
-                "id": book[0],
-                "title": book[1],
-                "sort": book[2],
-                "author": book[3],
-                "authorSort": book[4],
-                "description": description,
-                "cover": cover,
-                "coverSmall": cover_small,
-                "added": book[9].split(" ")[0],
-                "file": book_file,
-            }
-        )
+        title = book[1]
+        author = book[3]
+
+        if search:
+            search = search.lower()
+        if (
+            not search
+            or search in title.lower()
+            or search in author.lower()
+            or search in description.lower()
+        ):
+            book_list.append(
+                {
+                    "id": book[0],
+                    "title": title,
+                    "sort": book[2],
+                    "author": author,
+                    "authorSort": book[4],
+                    "description": description,
+                    "cover": cover,
+                    "coverSmall": cover_small,
+                    "added": book[9].split(" ")[0],
+                    "file": book_file,
+                }
+            )
 
     book_list = sorted(book_list, key=lambda x: x["authorSort"])
     return book_list

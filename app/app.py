@@ -74,6 +74,14 @@ def basic():
     return render_template("index_basic.html", books=books)
 
 
+@app.route("/b/<search>")
+@login_required
+def query(search):
+    books = get_books(search)
+    books = books[:50] if app.config["DEBUG"] else books
+    return render_template("index_basic.html", books=books)
+
+
 @app.route("/data/<path:path>")
 @login_required
 def get_data(path):
