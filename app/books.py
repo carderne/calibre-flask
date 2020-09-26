@@ -10,7 +10,7 @@ resize = flask_resize.make_resizer(
 )
 
 
-def get_books(search=None):
+def get_books(lim=None, search=None):
     data_dir = Path("app/data/")
     db = data_dir / "metadata.db"
     con = sqlite3.connect(db)
@@ -78,4 +78,6 @@ def get_books(search=None):
             )
 
     book_list = sorted(book_list, key=lambda x: x["authorSort"])
+    if lim:
+        book_list = book_list[:lim]
     return book_list

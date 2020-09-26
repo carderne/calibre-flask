@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Book library</title>
+        <meta name='viewport' content='initial-scale=1,maximum-scale=5,user-scalable=no' />
+        <link rel='shortcut icon' type='image/x-icon' href=/static/favicon.ico />
+    </head>
+    <body>
+        <header>
+            <nav><a href="/logout?d=basic">LOGOUT</a></nav>
+            <br>
+            <form action={{ url_for('basic') }} method='POST'>
+                <input type='text' name='s' id='s' placeholder='{{ s if s else "Search..." }}'></input>
+                <input type='submit' name='submit' value='Go'></input>
+            </form>
+        </header>
+        <br>
+        <main>
+            {%- for b in books %}
+            <p><a href="{{ b.file }}">{{ b.author }} - {{ b.title }}</a></p>
+            {%- endfor %}
+        </main>
+    </body>
+</html>
