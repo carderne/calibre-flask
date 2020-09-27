@@ -1,5 +1,4 @@
 from pathlib import Path
-from xml.etree import ElementTree as ET
 import sqlite3
 
 from bs4 import BeautifulSoup
@@ -10,74 +9,51 @@ resize = flask_resize.make_resizer(
 )
 
 
-def get_books(lim=None, search=None):
+def get_books(lim=-1, search="%"):
     data_dir = Path("app/data/")
     db = data_dir / "metadata.db"
     con = sqlite3.connect(db)
+    con.row_factory = sqlite3.Row
     cursor = con.cursor()
 
-    sql = """
-    SELECT books.id, books.title, books.sort, authors.name, books.author_sort,
-        books.path, data.name, data.format, books.has_cover, books.timestamp
+    search = search.upper() if search else "%"
+    sql = f"""
+    SELECT books.id AS id,
+           books.title AS title,
+           books.sort AS sort,
+           authors.name AS author,
+           books.author_sort AS authorSort,
+           books.path AS path,
+           data.name AS file,
+           data.format AS format,
+           books.timestamp AS added,
+           comments.text AS comments
     FROM books
     INNER JOIN books_authors_link ON books.id=books_authors_link.book
     INNER JOIN authors ON books_authors_link.author=authors.id
     INNER JOIN data ON books.id=data.book
+    INNER JOIN comments ON books.id=comments.book
     WHERE data.format IN ('MOBI', 'AZW', 'AZW3', 'PDF')
+      AND (authors.name LIKE '%{search}%'
+           OR books.title LIKE '%{search}%'
+           OR comments.text LIKE '%{search}%')
     GROUP BY books.id
+    ORDER BY books.author_sort
+    LIMIT {lim}
     """
+
     cursor.execute(sql)
-    books = cursor.fetchall()
+    books = [dict(b) for b in cursor.fetchall()]
     cursor.close()
 
-    book_list = []
-    for book in books:
-        try:
-            description = (
-                ET.parse(data_dir / book[5] / "metadata.opf")
-                .getroot()[0]
-                .find("{http://purl.org/dc/elements/1.1/}description")
-                .text
-            )
-            description = BeautifulSoup(description, "html.parser").get_text()
-        except AttributeError:
-            description = ""
-
-        has_cover = book[8]
-        book_file = f"/data/{book[5]}/{book[6]}.{book[7].lower()}"
-        cover_to_resize = (
-            f"data/{book[5]}/cover.jpg" if has_cover else "static/cover.jpg"
+    for b in books:
+        cover = f"data/{b['path']}/cover.jpg"
+        b.update(
+            comments=BeautifulSoup(b['comments'], "html.parser").get_text(),
+            added=b['added'].split(" ")[0],
+            file=f"/data/{b['path']}/{b['file']}.{b['format'].lower()}",
+            cover=resize(cover, "400x600", fill=True, placeholder=True),
+            coverSmall=resize(cover, "100x150", fill=True, placeholder=True),
         )
-        cover = resize(cover_to_resize, "400x600", fill=True)
-        cover_small = resize(cover_to_resize, "100x150", fill=True)
 
-        title = book[1]
-        author = book[3]
-
-        if search:
-            search = search.lower()
-        if (
-            not search
-            or search in title.lower()
-            or search in author.lower()
-            or search in description.lower()
-        ):
-            book_list.append(
-                {
-                    "id": book[0],
-                    "title": title,
-                    "sort": book[2],
-                    "author": author,
-                    "authorSort": book[4],
-                    "description": description,
-                    "cover": cover,
-                    "coverSmall": cover_small,
-                    "added": book[9].split(" ")[0],
-                    "file": book_file,
-                }
-            )
-
-    book_list = sorted(book_list, key=lambda x: x["authorSort"])
-    if lim:
-        book_list = book_list[:lim]
-    return book_list
+    return books

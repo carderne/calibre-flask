@@ -135,11 +135,11 @@ main {
     -webkit-box-orient: unset;
 }
 
-.description {
+.comments {
     display: none;
 }
 
-.wide > div > .description {
+.wide > div > .comments {
     display: unset;
 }
 

@@ -21,7 +21,7 @@ login_manager.init_app(app)
 
 users = yaml.safe_load(open("users.yaml"))
 debug = app.config["DEBUG"]
-book_lim = 50 if debug else None
+book_lim = 50 if debug else -1
 
 
 class User(UserMixin):
@@ -67,9 +67,7 @@ def index():
 @app.route("/b/", methods=["GET", "POST"])
 @login_required
 def basic():
-    s = None
-    if request.method == "POST":
-        s = request.form["s"]
+    s = request.form["s"] if request.method == "POST" else None
     books = get_books(lim=book_lim, search=s)
     return render_template("basic.html", books=books, s=s)
 
