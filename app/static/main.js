@@ -67,7 +67,7 @@ function updateFilter() {
         single.children[1].children[5],
       ];
       if (nodes.some((node) => node.innerText.toLowerCase().includes(text))) {
-        single.removeAttribute("style");
+        single.style.display = "initial";
         let re = new RegExp(text, "ig");
         nodes.forEach((node) => {
           node.innerHTML = node.innerText.replace(
@@ -81,7 +81,7 @@ function updateFilter() {
     });
   } else {
     [...divBooks.children].forEach((single) => {
-      single.removeAttribute("style");
+      single.style.display = "initial";
     });
     queryAll(".hl").forEach((node) => {
       node.parentElement.replaceChild(
