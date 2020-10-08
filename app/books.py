@@ -32,11 +32,11 @@ def get_books(lim=-1, search="%"):
     INNER JOIN books_authors_link ON books.id=books_authors_link.book
     INNER JOIN authors ON books_authors_link.author=authors.id
     INNER JOIN data ON books.id=data.book
-    INNER JOIN comments ON books.id=comments.book
-    WHERE data.format IN ('MOBI', 'AZW', 'AZW3', 'PDF')
-      AND (authors.name LIKE '%{search}%'
-           OR books.title LIKE '%{search}%'
-           OR comments.text LIKE '%{search}%')
+    LEFT JOIN comments ON books.id=comments.book
+    WHERE format IN ('MOBI', 'AZW', 'AZW3', 'PDF')
+      AND (author LIKE '%{search}%'
+           OR title LIKE '%{search}%'
+           OR comments LIKE '%{search}%')
     GROUP BY books.id
     ORDER BY books.author_sort
     LIMIT {lim}
@@ -48,9 +48,11 @@ def get_books(lim=-1, search="%"):
 
     for b in books:
         cover = f"data/{b['path']}/cover.jpg"
+        if b["comments"]:
+            comments = BeautifulSoup(b["comments"], "html.parser").get_text()
         b.update(
-            comments=BeautifulSoup(b['comments'], "html.parser").get_text(),
-            added=b['added'].split(" ")[0],
+            comments=comments,
+            added=b["added"].split(" ")[0],
             file=f"/data/{b['path']}/{b['file']}.{b['format'].lower()}",
             cover=resize(cover, "400x600", fill=True, placeholder=True),
             coverSmall=resize(cover, "100x150", fill=True, placeholder=True),
