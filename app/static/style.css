@@ -1,7 +1,10 @@
 :root {
     --text: #6B6F72;
     --header-bg: #160f42;
-    --header-fg:  #f5fafc
+    --header-fg:  #f5fafc;
+    --small: 100px;
+    --med: 200px;
+    --large: 300px;
 }
 
 html {
@@ -47,7 +50,6 @@ header a, header a:hover, header a:visited, header a:active {
 }
 
 select {
-    height: 19x;
     height: 25px;
 }
 
@@ -87,33 +89,63 @@ select {
 }
 
 main {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, var(--small));
+    justify-items: center;
+    gap: 1em 1em;
+    justify-content: space-evenly;
+    padding: 1em;
+}
+
+main[size="med"] {
+    grid-template-columns: repeat(auto-fit, var(--med));
+}
+
+main[size="large"] {
+    grid-template-columns: repeat(auto-fit, var(--large));
+}
+
+main[view="list"] {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(auto-fit, calc(1.5*var(--small)));
+}
+
+main[view="list"][size="med"] {
+    grid-template-rows: repeat(auto-fit, calc(1.5*var(--med)));
+}
+
+main[view="list"][size="large"] {
+    grid-template-rows: repeat(auto-fit, calc(1.5*var(--large)));
+}
+
+main[view="list"] .single {
     display: flex;
-    flex-wrap: wrap;
+    width: initial !important;
+    padding: 10px 0;
 }
 
-.list {
-    flex-direction: column;
+main img {
+    width: 100%;
+    max-height: 100%;
 }
 
-.single {
-    padding: 20px;
+main[view="list"] img {
     width: 100px;
 }
 
-.single > div:first-child {
-    flex-shrink: 0;
+main[view="list"][size="med"] img {
+    width: 200px;
 }
 
-.single.wide {
-    display: flex;
-    width: initial !important;
+main[view="list"][size="large"] img {
+    width: 300px;
 }
 
-.single.wide:nth-child(even) {
+main[view="list"] .single:nth-child(even) {
     background: #e0ebfe;
 }
 
-.single.wide > div:last-child {
+main[view="list"] .single > div:last-child {
     margin-left: 20px;
 }
 
@@ -139,12 +171,8 @@ main {
     display: none;
 }
 
-.wide > div > .comments {
+main[view="list"] .single > div > .comments {
     display: unset;
-}
-
-img {
-    width: 100%;
 }
 
 .hidden {

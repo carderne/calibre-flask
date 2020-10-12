@@ -27,9 +27,9 @@
             </div>
             <div>
                 <select name="size" id="size">
-                    <option value="100" selected>Size S</option>
-                    <option value="200">Size M</option>
-                    <option value="300">Size L</option>
+                    <option value="small" selected>Size S</option>
+                    <option value="med">Size M</option>
+                    <option value="large">Size L</option>
                 </select>
             </div>
             <div class="filter-box">
@@ -41,7 +41,7 @@
                 <a href="/logout">Logout</a>
             </div>
         </header>
-        <main id="books" class="wrap">
+        <main>
             {% for b in books %}
             <div class="single">
                 <div>

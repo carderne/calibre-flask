@@ -1,7 +1,8 @@
 const get = document.getElementById.bind(document);
+const query = document.querySelector.bind(document);
 const queryAll = document.querySelectorAll.bind(document);
 
-let divBooks = get("books");
+let divBooks = query("main");
 let elView = get("view");
 let elSort = get("sort");
 let elSize = get("size");
@@ -10,17 +11,7 @@ let elClear = get("clear");
 
 elView.onchange = updateView;
 function updateView() {
-  if (elView.value == "list") {
-    get("books").classList.add("list");
-    queryAll(".single").forEach((single) => {
-      single.classList.add("wide");
-    });
-  } else {
-    get("books").classList.remove("list");
-    queryAll(".single").forEach((single) => {
-      single.classList.remove("wide");
-    });
-  }
+  divBooks.setAttribute("view", elView.value);
 }
 
 elSort.oninput = updateSort;
@@ -46,11 +37,8 @@ function updateSort() {
 elSize.oninput = updateSize;
 function updateSize() {
   let size = elSize.value;
-  queryAll(".single").forEach((single) => {
-    single.style.width = size + "px";
-    single.children[0].style.width = size + "px";
-  });
-  let sizes = size == "100" ? "1vw" : "100vw";
+  query("main").setAttribute("size", size);
+  let sizes = size == "small" ? "1vw" : "100vw";
   queryAll("img").forEach((img) => {
     img["sizes"] = sizes;
   });
