@@ -48,6 +48,7 @@ def get_books(lim=-1, search="%"):
 
     for b in books:
         cover = f"data/{b['path']}/cover.jpg"
+        comments = ""
         if b["comments"]:
             comments = BeautifulSoup(b["comments"], "html.parser").get_text()
         b.update(
