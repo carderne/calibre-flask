@@ -44,7 +44,10 @@ def request_loader(request):
         return
     user = User()
     user.id = username
-    user.is_authenticated = check_password_hash(users[username], request.form["pw"])
+    try:
+        user.is_authenticated = check_password_hash(users[username], request.form["pw"])
+    except KeyError:
+        user.is_authenticated = False
     return user
 
 
@@ -91,7 +94,11 @@ def login():
         return render_template("login.html", msg=msg)
 
     username = request.form["username"]
-    if check_password_hash(users[username], request.form["pw"]):
+    try:
+        auth = check_password_hash(users[username], request.form["pw"])
+    except KeyError:
+        auth = False
+    if auth:
         user = User()
         user.id = username
         login_user(user)
