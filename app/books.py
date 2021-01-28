@@ -16,7 +16,8 @@ def get_books(lim=-1, search="%"):
     con.row_factory = sqlite3.Row
     cursor = con.cursor()
 
-    search = search.upper() if search else "%"
+    if not search:
+        search = "%"
     sql = f"""
     SELECT books.id AS id,
            books.title AS title,
@@ -33,12 +34,12 @@ def get_books(lim=-1, search="%"):
     INNER JOIN authors ON books_authors_link.author=authors.id
     INNER JOIN data ON books.id=data.book
     LEFT JOIN comments ON books.id=comments.book
-    WHERE format IN ('MOBI', 'AZW', 'AZW3', 'PDF')
-      AND (author LIKE '%{search}%'
-           OR title LIKE '%{search}%'
-           OR comments LIKE '%{search}%')
+    WHERE data.format IN ('MOBI', 'AZW', 'AZW3', 'PDF')
+      AND (authors.name LIKE '%{search}%'
+           OR books.title LIKE '%{search}%'
+           OR comments.text LIKE '%{search}%')
     GROUP BY books.id
-    ORDER BY books.author_sort
+    ORDER BY books.timestamp DESC
     LIMIT {lim}
     """
 
