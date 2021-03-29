@@ -26,6 +26,11 @@ Create a `config.py` file containing a secret key for Flask to use for encryptio
 ./bin/make_config.py > config.py
 ```
 
+If you want the website to work without a username/password (e.g. on a RPi firewalled from the internet) then add the following line to `config.py`:
+```
+LOGIN_DISABLED = True
+```
+
 Next create a `users.yaml` to control authentication. This scripts outputs usernames with hashed passwords.
 ```
 ./bin/create_user.py
