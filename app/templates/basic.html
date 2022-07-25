@@ -8,9 +8,9 @@
     </head>
     <body>
         <header>
-            <nav><a href="/logout?d=basic">LOGOUT</a></nav>
+            <nav><a href="/logout">LOGOUT</a></nav>
             <br>
-            <form action={{ url_for('basic') }} method='POST'>
+            <form action={{ url_for('index') }} method='POST'>
                 <input type='text' name='s' id='s' placeholder='{{ s if s else "Search..." }}'></input>
                 <input type='submit' name='submit' value='Go'></input>
             </form>

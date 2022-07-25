@@ -30,6 +30,8 @@ users = yaml.safe_load(open("users.yaml"))
 debug = app.config["DEBUG"]
 book_lim = 50 if debug else -1
 
+limited_user_agents = ["Kindle", "Kobo"]
+
 
 class User(UserMixin):  # type: ignore[no-any-unimported]
     pass
@@ -60,26 +62,26 @@ def request_loader(request: Request) -> User | None:
 
 @login_manager.unauthorized_handler
 def unauthorized_handler() -> Response:
-    return redirect(
-        url_for(
-            "login", msg="You must log in!", d=request.endpoint, s=request.args.get("s")
-        )
-    )
+    return redirect(url_for("login", msg="You must log in!", s=request.args.get("s")))
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 @login_required
 def index() -> str:
-    books = get_books(lim=book_lim)
-    return render_template("index.html", books=books)
+    ua = str(request.headers.get("User-Agent"))
+    if any(word in ua for word in limited_user_agents):
+        s = request.form["s"] if request.method == "POST" else None
+        books = get_books(lim=book_lim, search=s if s else "%")
+        return render_template("basic.html", books=books, s=s)
+    else:
+        books = get_books(lim=book_lim)
+        return render_template("index.html", books=books)
 
 
-@app.route("/b/", methods=["GET", "POST"])
+@app.route("/b/")
 @login_required
-def basic() -> str:
-    s = request.form["s"] if request.method == "POST" else "%"
-    books = get_books(lim=book_lim, search=s)
-    return render_template("basic.html", books=books, s=s)
+def basic() -> Response:
+    return redirect(url_for("index"), code=301)
 
 
 @app.route("/data/<path:path>")
@@ -109,9 +111,7 @@ def login() -> str | Response:
         user = User()
         user.id = username
         login_user(user)
-        dest = request.args.get("d")
-        dest = dest if dest else "index"
-        return redirect(url_for(dest, s=request.args.get("s")))
+        return redirect(url_for("index", s=request.args.get("s")))
 
     return redirect(
         url_for(
@@ -123,4 +123,4 @@ def login() -> str | Response:
 @app.route("/logout")
 def logout() -> Response:
     logout_user()
-    return redirect(url_for("login", msg="You've logged out!", d=request.args.get("d")))
+    return redirect(url_for("login", msg="You've logged out!"))
