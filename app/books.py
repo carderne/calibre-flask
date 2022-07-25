@@ -1,15 +1,15 @@
-from pathlib import Path
 import sqlite3
+from pathlib import Path
 
+import flask_resize  # type: ignore[import]
 from bs4 import BeautifulSoup
-import flask_resize
 
 resize = flask_resize.make_resizer(
     flask_resize.configuration.Config(url="", root="app", target_directory="resized")
 )
 
 
-def get_books(lim=-1, search="%"):
+def get_books(lim: int = -1, search: str = "%") -> list[dict]:
     data_dir = Path("app/data/")
     db = data_dir / "metadata.db"
     con = sqlite3.connect(db)
