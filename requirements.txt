@@ -1,6 +1,8 @@
-beautifulsoup4
-Flask
-Flask-Login
-Flask-Resize
-gunicorn
-PyYAML
+beautifulsoup4==4.11.1
+click==8.1.3
+Flask==2.1.2
+Flask-Login==0.6.1
+Flask-Resize==2.0.4
+gunicorn==20.1.0
+PyYAML==6.0
+Werkzeug==2.0.3
