@@ -5,7 +5,7 @@ import flask_resize  # type: ignore[import]
 from bs4 import BeautifulSoup
 
 resize = flask_resize.make_resizer(
-    flask_resize.configuration.Config(url="", root="app", target_directory="resized")
+    flask_resize.configuration.Config(url=".", root="app", target_directory="resized")
 )
 
 
@@ -55,7 +55,7 @@ def get_books(lim: int = -1, search: str = "%") -> list[dict]:
         b.update(
             comments=comments,
             added=b["added"].split(" ")[0],
-            file=f"/data/{b['path']}/{b['file']}.{b['format'].lower()}",
+            file=f"data/{b['path']}/{b['file']}.{b['format'].lower()}",
             cover=resize(cover, "400x600", fill=True, placeholder=True),
             coverSmall=resize(cover, "100x150", fill=True, placeholder=True),
         )

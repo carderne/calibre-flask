@@ -90,6 +90,10 @@ KillMode=mixed
 TimeoutStopSec=5
 PrivateTmp=true
 
+# add this to serve under a subdirectory
+# eg mydomain.com/books
+Environment="SCRIPT_NAME=/books"
+
 [Install]
 WantedBy=multi-user.target
 ```
