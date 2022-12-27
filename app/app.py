@@ -26,7 +26,10 @@ app.config.from_pyfile("../config.py")
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-users = yaml.safe_load(open("users.yaml"))
+if not app.config["LOGIN_DISABLED"]:
+    users = yaml.safe_load(open("users.yaml"))
+else:
+    users = []
 debug = app.config["DEBUG"]
 book_lim = 50 if debug else -1
 

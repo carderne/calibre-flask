@@ -49,6 +49,20 @@ Serve with gunicorn:
 gunicorn app.app:app
 ```
 
+## Docker
+Build:
+```bash
+docker build --tag carderne/calibre-flask .
+```
+
+Run:
+```bash
+docker run --name calibre-flask --rm \
+  -p 8000:8000 \
+  -v /path/to/books:/app/app/data \
+  carderne/calibre-flask
+```
+
 ## Nginx config
 ```
 server {

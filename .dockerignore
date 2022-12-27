@@ -1,0 +1,8 @@
+.git
+.gitignore
+.ruff_cache
+.mypy_cache
+setup.cfg
+bin/
+config.py
+users.yaml
