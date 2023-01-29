@@ -18,7 +18,7 @@
         <br>
         <main>
             {%- for b in books %}
-            <p><a href="{{ b.file }}">{{ b.author }} - {{ b.title }}</a></p>
+            <p><a href="/books/{{ b.file }}">{{ b.author }} - {{ b.title }}</a></p>
             {%- endfor %}
         </main>
     </body>

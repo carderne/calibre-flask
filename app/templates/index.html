@@ -45,7 +45,7 @@
             {% for b in books %}
             <div class="single">
                 <div>
-                    <a href="{{ b.file }}">
+                    <a href="/books/{{ b.file }}">
                         <img src="{{ b.coverSmall }}"
                              srcset="{{ b.coverSmall}} 100w, {{ b.cover }} 400w"
                              sizes="1vw" alt="cover" loading="lazy">

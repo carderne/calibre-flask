@@ -20,6 +20,8 @@ from werkzeug.wrappers.response import Response
 
 from .books import get_books
 
+PREFIX = "/books"
+
 app = Flask(__name__)
 app.config.from_pyfile("../config.py")
 
@@ -68,37 +70,32 @@ def unauthorized_handler() -> Response:
     return redirect(url_for("login", msg="You must log in!", s=request.args.get("s")))
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route(PREFIX + "/", methods=["GET", "POST"])
 @login_required
 def index() -> str:
-    ua = str(request.headers.get("User-Agent"))
-    if any(word in ua for word in limited_user_agents):
-        s = request.form["s"] if request.method == "POST" else None
-        books = get_books(lim=book_lim, search=s if s else "%")
-        return render_template("basic.html", books=books, s=s)
-    else:
-        books = get_books(lim=book_lim)
-        return render_template("index.html", books=books)
+    s = request.form["s"] if request.method == "POST" else None
+    books = get_books(lim=book_lim, search=s if s else "%")
+    return render_template("basic.html", books=books, s=s)
 
 
-@app.route("/b/")
+@app.route(PREFIX + "/b/")
 @login_required
 def basic() -> Response:
     return redirect(url_for("index"), code=301)
 
 
-@app.route("/data/<path:path>")
+@app.route(PREFIX + "/data/<path:path>")
 @login_required
 def get_data(path: str) -> Response:
     return send_from_directory("data", path)
 
 
-@app.route("/resized/<path:path>")
+@app.route(PREFIX + "/resized/<path:path>")
 def get_img(path: str) -> Response:
     return send_from_directory("resized", path)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route(PREFIX + "/login", methods=["GET", "POST"])
 def login() -> str | Response:
     if request.method == "GET":
         msg = request.args.get("msg")
@@ -123,7 +120,7 @@ def login() -> str | Response:
     )
 
 
-@app.route("/logout")
+@app.route(PREFIX + "/logout")
 def logout() -> Response:
     logout_user()
     return redirect(url_for("login", msg="You've logged out!"))
