@@ -78,21 +78,10 @@ def index() -> str:
     return render_template("basic.html", books=books, s=s)
 
 
-@app.route(PREFIX + "/b/")
-@login_required
-def basic() -> Response:
-    return redirect(url_for("index"), code=301)
-
-
 @app.route(PREFIX + "/data/<path:path>")
 @login_required
 def get_data(path: str) -> Response:
     return send_from_directory("data", path)
-
-
-@app.route(PREFIX + "/resized/<path:path>")
-def get_img(path: str) -> Response:
-    return send_from_directory("resized", path)
 
 
 @app.route(PREFIX + "/login", methods=["GET", "POST"])

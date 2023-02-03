@@ -1,12 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-import flask_resize  # type: ignore[import]
 from bs4 import BeautifulSoup
-
-resize = flask_resize.make_resizer(
-    flask_resize.configuration.Config(url=".", root="app", target_directory="resized")
-)
 
 
 def get_books(lim: int = -1, search: str = "%") -> list[dict]:
@@ -48,7 +43,6 @@ def get_books(lim: int = -1, search: str = "%") -> list[dict]:
     cursor.close()
 
     for b in books:
-        cover = f"data/{b['path']}/cover.jpg"
         comments = ""
         if b["comments"]:
             comments = BeautifulSoup(b["comments"], "html.parser").get_text()
@@ -56,8 +50,6 @@ def get_books(lim: int = -1, search: str = "%") -> list[dict]:
             comments=comments,
             added=b["added"].split(" ")[0],
             file=f"data/{b['path']}/{b['file']}.{b['format'].lower()}",
-            cover=resize(cover, "400x600", fill=True, placeholder=True),
-            coverSmall=resize(cover, "100x150", fill=True, placeholder=True),
         )
 
     return books
