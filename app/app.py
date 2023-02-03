@@ -1,3 +1,5 @@
+import os
+
 import yaml
 from flask import (
     Flask,
@@ -20,7 +22,7 @@ from werkzeug.wrappers.response import Response
 
 from .books import get_books
 
-PREFIX = "/books"
+PREFIX = os.getenv("BOOKS_PREFIX", "")
 
 app = Flask(__name__)
 app.config.from_pyfile("../config.py")
