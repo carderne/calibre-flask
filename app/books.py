@@ -1,10 +1,8 @@
 import sqlite3
 from pathlib import Path
 
-from bs4 import BeautifulSoup
 
-
-def get_books(lim: int = -1, search: str = "%") -> list[dict]:
+def get_books(search: str = "%") -> list[dict]:
     data_dir = Path("app/data/")
     db = data_dir / "metadata.db"
     con = sqlite3.connect(db)
@@ -35,21 +33,12 @@ def get_books(lim: int = -1, search: str = "%") -> list[dict]:
            OR comments.text LIKE '%{search}%')
     GROUP BY books.id
     ORDER BY books.timestamp DESC
-    LIMIT {lim}
     """
 
     cursor.execute(sql)
-    books = [dict(b) for b in cursor.fetchall()]
+    data = cursor.fetchall()
     cursor.close()
-
-    for b in books:
-        comments = ""
-        if b["comments"]:
-            comments = BeautifulSoup(b["comments"], "html.parser").get_text()
-        b.update(
-            comments=comments,
-            added=b["added"].split(" ")[0],
-            file=f"data/{b['path']}/{b['file']}.{b['format'].lower()}",
-        )
-
-    return books
+    return [
+        {**b, "file": f"data/{b['path']}/{b['file']}.{b['format'].lower()}"}
+        for b in data
+    ]
