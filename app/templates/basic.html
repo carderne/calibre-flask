@@ -8,14 +8,11 @@
     </head>
     <body>
         <header>
-            <nav><a href="/logout">LOGOUT</a></nav>
-            <br>
             <form action={{ url_for('index') }} method='POST'>
                 <input type='text' name='s' id='s' placeholder='{{ s if s else "Search..." }}'></input>
                 <input type='submit' name='submit' value='Go'></input>
             </form>
         </header>
-        <br>
         <main>
             {%- for b in books %}
             <p><a href="/books/{{ b.file }}">{{ b.author }} - {{ b.title }}</a></p>
