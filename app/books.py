@@ -1,8 +1,18 @@
 import sqlite3
+from dataclasses import dataclass
 from pathlib import Path
 
 
-def get_books(search: str = "%") -> list[dict]:
+@dataclass
+class Book:
+    author: str
+    title: str
+    format: str
+    path: str
+    file: str
+
+
+def get_books(search: str = "%") -> list[Book]:
     data_dir = Path("app/data/")
     db = data_dir / "metadata.db"
     con = sqlite3.connect(db)
@@ -38,7 +48,14 @@ def get_books(search: str = "%") -> list[dict]:
     cursor.execute(sql)
     data = cursor.fetchall()
     cursor.close()
-    return [
-        {**b, "file": f"data/{b['path']}/{b['file']}.{b['format'].lower()}"}
+    books = [
+        Book(
+            path=b["path"],
+            format=b["format"],
+            author=b["author"],
+            title=b["title"],
+            file=f"data/{b['path']}/{b['file']}.{b['format'].lower()}",
+        )
         for b in data
     ]
+    return books
