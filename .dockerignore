@@ -4,5 +4,6 @@
 .mypy_cache
 setup.cfg
 bin/
+app/data
 config.py
 users.yaml

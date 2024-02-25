@@ -1,4 +1,4 @@
-FROM python:slim-buster
+FROM python:3.12-slim-bookworm
 
 WORKDIR /app
 COPY requirements.txt requirements.txt
@@ -9,5 +9,4 @@ COPY app app
 ENV PORT 8000
 EXPOSE $PORT
 
-# ENTRYPOINT gunicorn app.app:app --bind 0.0.0.0:$PORT
-ENTRYPOINT BOOKS_PREFIX=/books FLASK_DEBUG=1 FLASK_APP=app/app.py flask run -h 0.0.0.0 -p $PORT
+ENTRYPOINT BOOKS_PREFIX=/books gunicorn app.app:app --bind 0.0.0.0:$PORT
